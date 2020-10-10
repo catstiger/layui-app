@@ -5,95 +5,99 @@ layui.define(["laytpl", "layer"], function (e) {
     layer = layui.layer,
     setter = layui.setter,
     o = (layui.device(), layui.hint()),
-    i = function (e) {
+    view = function (e) {
       return new d(e);
     },
     layAppBody = "LAY_app_body",
     d = function (e) {
       (this.id = e), (this.container = jquery("#" + (e || layAppBody)));
     };
-  (i.loading = function (e) {
+  (view.loading = function (e) {
     e.append(
       (this.elemLoad = jquery(
         '<i class="layui-anim layui-anim-rotate layui-anim-loop layui-icon layui-icon-loading layadmin-loading"></i>'
       ))
     );
   }),
-    (i.removeLoad = function () {
+    (view.removeLoad = function () {
       this.elemLoad && this.elemLoad.remove();
     }),
-    (i.exit = function () {
+    (view.exit = function () {
       layui.data(setter.tableName, {
         key: setter.request.tokenName,
         remove: !0,
       }),
         (location.hash = "/user/login");
     }),
-    (i.req = function (e) {
-      var success = e.success,
-        error = e.error,
+    (view.req = function (options) {
+      var success = options.success,
+        error = options.error,
         request = setter.request,
         response = setter.response,
         d = function () {
-          return setter.debug ? "<br><cite>URL：</cite>" + e.url : "";
+          return setter.debug ? "<br><cite>URL：</cite>" + options.url : "";
         };
       if (
-        ((e.data = e.data || {}),
-        (e.headers = e.headers || {}),
+        ((options.data = options.data || {}),
+        (options.headers = options.headers || {}),
         request.tokenName)
       ) {
-        var l = "string" == typeof e.data ? JSON.parse(e.data) : e.data;
-        (e.data[request.tokenName] =
-          request.tokenName in l
-            ? e.data[request.tokenName]
+        var params =
+          "string" == typeof options.data
+            ? JSON.parse(options.data)
+            : options.data;
+        (options.data[request.tokenName] =
+          request.tokenName in params
+            ? options.data[request.tokenName]
             : layui.data(setter.tableName)[request.tokenName] || ""),
-          (e.headers[request.tokenName] =
-            request.tokenName in e.headers
-              ? e.headers[request.tokenName]
+          (options.headers[request.tokenName] =
+            request.tokenName in options.headers
+              ? options.headers[request.tokenName]
               : layui.data(setter.tableName)[request.tokenName] || "");
       }
       return (
-        delete e.success,
-        delete e.error,
+        delete options.success,
+        delete options.error,
         jquery.ajax(
           jquery.extend(
             {
               type: "get",
               dataType: "json",
-              success: function (t) {
-                var n = response.statusCode;
-                if (t[response.statusName] == n.ok)
-                  "function" == typeof e.done && e.done(t);
-                else if (t[response.statusName] == n.logout) i.exit();
+              success: function (resp) {
+                var statusCode = response.statusCode;
+                if (resp[response.statusName] == statusCode.ok)
+                  "function" == typeof options.done && options.done(resp);
+                else if (resp[response.statusName] == statusCode.logout)
+                  view.exit();
                 else {
                   var r = [
                     "<cite>Error：</cite> " +
-                      (t[response.msgName] || "返回状态码异常"),
+                      (resp[response.msgName] || "返回状态码异常"),
                     d(),
                   ].join("");
-                  i.error(r);
+                  view.error(r);
                 }
-                "function" == typeof success && success(t);
+                "function" == typeof success && success(resp);
               },
               error: function (e, t) {
                 var a = [
                   "请求异常，请重试<br><cite>错误信息：</cite>" + t,
                   d(),
                 ].join("");
-                i.error(a), "function" == typeof error && error(res);
+                view.error(a), "function" == typeof error && error(res);
               },
             },
-            e
+            options
           )
         )
       );
     }),
-    (i.popup = function (e) {
-      var a = e.success,
-        r = e.skin;
+    (view.popup = function (options) {
+      var success = options.success,
+        skin = options.skin;
       return (
-        delete e.success,
-        delete e.skin,
+        delete options.success,
+        delete options.skin,
         layer.open(
           jquery.extend(
             {
@@ -101,7 +105,7 @@ layui.define(["laytpl", "layer"], function (e) {
               title: "提示",
               content: "",
               id: "LAY-system-view-popup",
-              skin: "layui-layer-admin" + (r ? " " + r : ""),
+              skin: "layui-layer-admin" + (skin ? " " + skin : ""),
               shadeClose: !0,
               closeBtn: !1,
               success: function (e, r) {
@@ -110,19 +114,20 @@ layui.define(["laytpl", "layer"], function (e) {
                   o.on("click", function () {
                     layer.close(r);
                   }),
-                  "function" == typeof a && a.apply(this, arguments);
+                  "function" == typeof success &&
+                    success.apply(this, arguments);
               },
             },
-            e
+            options
           )
         )
       );
     }),
-    (i.error = function (e, a) {
-      return i.popup(
+    (view.error = function (content, a) {
+      return view.popup(
         jquery.extend(
           {
-            content: e,
+            content: content,
             maxWidth: 300,
             offset: "t",
             anim: 6,
@@ -132,43 +137,42 @@ layui.define(["laytpl", "layer"], function (e) {
         )
       );
     }),
-    (d.prototype.render = function (e, a) {
+
+    (d.prototype.render = function (viewPath, a) {
       var that = this;
       layui.router();
       return (
-        (e = setter.views + e + setter.engine),
-        jquery("#" + layAppBody)
-          .children(".layadmin-loading")
-          .remove(),
-        i.loading(that.container),
+        (viewPath = setter.views + viewPath + setter.engine),
+        jquery("#" + layAppBody).children(".layadmin-loading").remove(),
+        view.loading(that.container),
+
         jquery.ajax({
-          url: e,
+          url: viewPath,
           type: "get",
           dataType: "html",
           data: {
             v: layui.cache.version,
           },
-          success: function (e) {
-            e = "<div>" + e + "</div>";
-            var r = jquery(e).find("title"),
-              o =
-                r.text() || (e.match(/\<title\>([\s\S]*)\<\/title>/) || [])[1],
-              s = {
-                title: o,
-                body: e,
+          success: function (body) {
+            body = "<div>" + body + "</div>";
+            var title = jquery(body).find("title"),
+              titleText = title.text() || (body.match(/\<title\>([\s\S]*)\<\/title>/) || [])[1],
+              struct = {
+                title: titleText,
+                body: body,
               };
-            r.remove(),
+            title.remove(),
               (that.params = a || {}),
-              that.then && (that.then(s), delete that.then),
-              that.parse(e),
-              i.removeLoad(),
-              that.done && (that.done(s), delete that.done);
+              that.then && (that.then(struct), delete that.then),
+              that.parse(body),
+              view.removeLoad(),
+              that.done && (that.done(struct), delete that.done);
           },
           error: function (e) {
             return (
-              i.removeLoad(),
+              view.removeLoad(),
               that.render.isError
-                ? i.error("请求视图文件异常，状态：" + e.status)
+                ? view.error("请求视图文件异常，状态：" + e.status)
                 : (404 === e.status
                     ? that.render("template/tips/404")
                     : that.render("template/tips/error"),
@@ -179,6 +183,7 @@ layui.define(["laytpl", "layer"], function (e) {
         that
       );
     }),
+
     (d.prototype.parse = function (e, n, r) {
       var s = this,
         d = "object" == typeof e,
@@ -221,7 +226,7 @@ layui.define(["laytpl", "layer"], function (e) {
             o.error("lay-headers: " + d.message), (s = s || {});
           }
           n
-            ? i.req({
+            ? view.req({
                 type: e.attr("lay-type") || "get",
                 url: n,
                 data: r,
@@ -266,5 +271,5 @@ layui.define(["laytpl", "layer"], function (e) {
     (d.prototype.done = function (e) {
       return (this.done = e), this;
     }),
-    e("view", i);
+    e("view", view);
 });
