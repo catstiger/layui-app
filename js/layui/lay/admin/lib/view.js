@@ -38,7 +38,9 @@ layui.define(["laytpl", "layer"], function (e) {
           return setter.debug ? "<br><cite>URL：</cite>" + e.url : "";
         };
       if (
-        ((e.data = e.data || {}), (e.headers = e.headers || {}), request.tokenName)
+        ((e.data = e.data || {}),
+        (e.headers = e.headers || {}),
+        request.tokenName)
       ) {
         var l = "string" == typeof e.data ? JSON.parse(e.data) : e.data;
         (e.data[request.tokenName] =
