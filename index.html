@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="/images/logo.png" />
+    <link rel="stylesheet" href="/js/layui/css/layui.css?t=1.4.0" media="all" />
+    <title>Layui Admin</title>
+  </head>
+  <body>
+    <div id="LAY_app"></div>
+    <script src="/js/layui/layui.js?t=1.4.0"></script>
+    <script>
+      layui
+        .config({
+          base: "/js/layui/lay/admin/pro/", //指定 layuiAdmin 项目路径
+          version: "1.4.0",
+        })
+        .use("index", function () {
+          var layer = layui.layer,
+            admin = layui.admin;
+          layer.ready(function () {
+            
+          });
+        });
+    </script>
+  </body>
+</html>
