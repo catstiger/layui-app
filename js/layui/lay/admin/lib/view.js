@@ -1,5 +1,5 @@
 /** layuiAdmin.pro-v1.4.0 LPPL License By https://www.layui.com/admin/ */
-layui.define(["laytpl", "layer"], function (e) {
+layui.define(["laytpl", "layer"], function (exports) {
   var jquery = layui.jquery,
     laytpl = layui.laytpl,
     layer = layui.layer,
@@ -272,5 +272,5 @@ layui.define(["laytpl", "layer"], function (e) {
     (viewInner.prototype.done = function (e) {
       return (this.done = e), this;
     }),
-    e("view", view);
+    exports("view", view);
 });
