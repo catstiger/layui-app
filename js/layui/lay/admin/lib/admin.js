@@ -20,7 +20,7 @@ layui.define("view", function (e) {
     layuiIconSpreadLeft = "layui-icon-spread-left",
     layadminSideShrink = "layadmin-side-shrink",
     laySystemSideMenu = "LAY-system-side-menu",
-    C = {
+    Admin = {
       v: "1.4.0 pro",
       req: view.req,
       exit: view.exit,
@@ -37,7 +37,7 @@ layui.define("view", function (e) {
       },
       popup: view.popup,
       popupRight: function (e) {
-        return (C.popup.index = layer.open(
+        return (Admin.popup.index = layer.open(
           jquery.extend(
             {
               type: 1,
@@ -65,18 +65,18 @@ layui.define("view", function (e) {
           e
         );
         var t,
-          i = e.seconds,
-          n = function (l) {
+          secs = e.seconds,
+          countDown = function (l) {
             var s = jquery(e.elem);
-            i--,
-              i < 0
+            secs--,
+              secs < 0
                 ? (s.removeClass(layuiDisabled).html("获取验证码"),
-                  (i = e.seconds),
+                  (secs = e.seconds),
                   clearInterval(t))
-                : s.addClass(layuiDisabled).html(i + "秒后重获"),
+                : s.addClass(layuiDisabled).html(secs + "秒后重获"),
               l ||
                 (t = setInterval(function () {
-                  n(!0);
+                  countDown(!0);
                 }, 1e3));
           };
         body.off("click", e.elem).on("click", e.elem, function () {
@@ -84,14 +84,14 @@ layui.define("view", function (e) {
             (e.elemVercode = jquery(e.elemVercode));
           var t = e.elemPhone,
             l = t.val();
-          if (i === e.seconds && !jquery(this).hasClass(layuiDisabled)) {
+          if (secs === e.seconds && !jquery(this).hasClass(layuiDisabled)) {
             if (!/^1\d{10}$/.test(l))
               return t.focus(), layer.msg("请输入正确的手机号");
             if ("object" == typeof e.ajax) {
               var s = e.ajax.success;
               delete e.ajax.success;
             }
-            C.req(
+            Admin.req(
               jquery.extend(
                 !0,
                 {
@@ -106,7 +106,7 @@ layui.define("view", function (e) {
                       shade: 0,
                     }),
                       e.elemVercode.focus(),
-                      n(),
+                      countDown(),
                       s && s(a);
                   },
                 },
@@ -116,33 +116,36 @@ layui.define("view", function (e) {
           }
         });
       },
+
       screen: function () {
         var e = win.width();
         return e > 1200 ? 3 : e > 992 ? 2 : e > 768 ? 1 : 0;
       },
+
       sideFlexible: function (e) {
-        var t = container,
+        var cnt = container,
           i = jquery("#" + layAppFlexible),
-          l = C.screen();
+          l = Admin.screen();
         "spread" === e
           ? (i.removeClass(layuiIconSpreadLeft).addClass(layuiIconShrinkRight),
             l < 2
-              ? t.addClass(layadminSideSpreadSm)
-              : t.removeClass(layadminSideSpreadSm),
-            t.removeClass(layadminSideShrink))
+              ? cnt.addClass(layadminSideSpreadSm)
+              : cnt.removeClass(layadminSideSpreadSm),
+            cnt.removeClass(layadminSideShrink))
           : (i.removeClass(layuiIconShrinkRight).addClass(layuiIconSpreadLeft),
             l < 2
-              ? t.removeClass(layadminSideShrink)
-              : t.addClass(layadminSideShrink),
-            t.removeClass(layadminSideSpreadSm)),
+              ? cnt.removeClass(layadminSideShrink)
+              : cnt.addClass(layadminSideShrink),
+            cnt.removeClass(layadminSideSpreadSm)),
           layui.event.call(this, setter.MOD_NAME, "side({*})", {
             status: e,
           });
       },
+
       resizeTable: function (e) {
-        var t = this,
+        var that = this,
           i = function () {
-            t.tabsBody(C.tabsPage.index)
+            that.tabsBody(Admin.tabsPage.index)
               .find(".layui-table-view")
               .each(function () {
                 var e = jquery(this).attr("lay-id");
@@ -151,10 +154,11 @@ layui.define("view", function (e) {
           };
         layui.table && (e ? setTimeout(i, e) : i());
       },
+
       theme: function (e) {
         var i = (setter.theme, layui.data(setter.tableName)),
-          l = "LAY_layadmin_theme",
-          s = document.createElement("style"),
+          layAdminTheme = "LAY_layadmin_theme",
+          domStyle = document.createElement("style"),
           r = layTpl(
             [
               ".layui-side-menu,",
@@ -181,13 +185,14 @@ layui.define("view", function (e) {
               "{{# } }}",
             ].join("")
           ).render((e = jquery.extend({}, i.theme, e))),
-          u = document.getElementById(l);
-        "styleSheet" in s
-          ? (s.setAttribute("type", "text/css"), (s.styleSheet.cssText = r))
-          : (s.innerHTML = r),
-          (s.id = l),
+
+          u = document.getElementById(layAdminTheme);
+        "styleSheet" in domStyle
+          ? (domStyle.setAttribute("type", "text/css"), (domStyle.styleSheet.cssText = r))
+          : (domStyle.innerHTML = r),
+          (domStyle.id = layAdminTheme),
           u && body[0].removeChild(u),
-          body[0].appendChild(s),
+          body[0].appendChild(domStyle),
           body.attr("layadmin-themealias", e.color.alias),
           (i.theme = i.theme || {}),
           layui.each(e, function (e, a) {
@@ -198,64 +203,74 @@ layui.define("view", function (e) {
             value: i.theme,
           });
       },
+
       initTheme: function (e) {
         var a = setter.theme;
         (e = e || 0),
           a.color[e] &&
             ((a.color[e].index = e),
-            C.theme({
+            Admin.theme({
               color: a.color[e],
             }));
       },
+
       tabsPage: {},
-      tabsHeader: function (e) {
+      tabsHeader: function (index) {
         return jquery("#LAY_app_tabsheader")
           .children("li")
-          .eq(e || 0);
+          .eq(index || 0);
       },
-      tabsBody: function (e) {
+
+      tabsBody: function (index) {
         return jquery(layAppBody)
           .find("." + layadminTabsbodyItem)
-          .eq(e || 0);
+          .eq(index || 0);
       },
-      tabsBodyChange: function (e) {
-        C.tabsHeader(e).attr("lay-attr", layui.router().href),
-          C.tabsBody(e).addClass(layuiShow).siblings().removeClass(layuiShow),
-          k.rollPage("auto", e);
+
+      tabsBodyChange: function (index) {
+        Admin.tabsHeader(index).attr("lay-attr", layui.router().href),
+          Admin.tabsBody(index).addClass(layuiShow).siblings().removeClass(layuiShow),
+          k.rollPage("auto", index);
       },
+
       resize: function (e) {
-        var a = layui.router(),
-          t = a.path.join("-");
-        C.resizeFn[t] &&
-          (win.off("resize", C.resizeFn[t]), delete C.resizeFn[t]),
+        var router = layui.router(),
+          paths = router.path.join("-");
+        Admin.resizeFn[paths] &&
+          (win.off("resize", Admin.resizeFn[paths]), delete Admin.resizeFn[paths]),
           "off" !== e &&
-            (e(), (C.resizeFn[t] = e), win.on("resize", C.resizeFn[t]));
+            (e(), (Admin.resizeFn[paths] = e), win.on("resize", Admin.resizeFn[paths]));
       },
       resizeFn: {},
+
       runResize: function () {
         var e = layui.router(),
           a = e.path.join("-");
-        C.resizeFn[a] && C.resizeFn[a]();
+        Admin.resizeFn[a] && Admin.resizeFn[a]();
       },
+
       delResize: function () {
         this.resize("off");
       },
+
       closeThisTabs: function () {
-        C.tabsPage.index &&
+        Admin.tabsPage.index &&
           jquery(z)
-            .eq(C.tabsPage.index)
+            .eq(Admin.tabsPage.index)
             .find(".layui-tab-close")
             .trigger("click");
       },
+
       fullScreen: function () {
-        var e = document.documentElement,
-          a =
-            e.requestFullScreen ||
-            e.webkitRequestFullScreen ||
-            e.mozRequestFullScreen ||
-            e.msRequestFullscreen;
-        "undefined" != typeof a && a && a.call(e);
+        var docEle = document.documentElement,
+          fullScreen =
+            docEle.requestFullScreen ||
+            docEle.webkitRequestFullScreen ||
+            docEle.mozRequestFullScreen ||
+            docEle.msRequestFullscreen;
+        "undefined" != typeof fullScreen && fullScreen && fullScreen.call(docEle);
       },
+
       exitScreen: function () {
         document.documentElement;
         document.exitFullscreen
@@ -266,6 +281,7 @@ layui.define("view", function (e) {
           ? document.webkitCancelFullScreen()
           : document.msExitFullscreen && document.msExitFullscreen();
       },
+
       correctRouter: function (e) {
         return (
           /^\//.test(e) || (e = "/" + e),
@@ -275,15 +291,18 @@ layui.define("view", function (e) {
         );
       },
     },
-    k = (C.events = {
+
+    k = (Admin.events = {
       flexible: function (e) {
         var a = e.find("#" + layAppFlexible),
           t = a.hasClass(layuiIconSpreadLeft);
-        C.sideFlexible(t ? "spread" : null), C.resizeTable(350);
+        Admin.sideFlexible(t ? "spread" : null), Admin.resizeTable(350);
       },
+
       refresh: function () {
         layui.index.render();
       },
+
       serach: function (e) {
         e.off("keypress").on("keypress", function (a) {
           if (this.value.replace(/\s/g, "") && 13 === a.keyCode) {
@@ -293,31 +312,34 @@ layui.define("view", function (e) {
               (i =
                 i +
                 ' <span style="color: #FF5722;">' +
-                C.escape(this.value) +
+                Admin.escape(this.value) +
                 "</span>"),
-              (location.hash = C.correctRouter(t)),
+              (location.hash = Admin.correctRouter(t)),
               k.serach.keys || (k.serach.keys = {}),
-              (k.serach.keys[C.tabsPage.index] = this.value),
-              this.value === k.serach.keys[C.tabsPage.index] && k.refresh(e),
+              (k.serach.keys[Admin.tabsPage.index] = this.value),
+              this.value === k.serach.keys[Admin.tabsPage.index] && k.refresh(e),
               (this.value = "");
           }
         });
       },
+
       message: function (e) {
         e.find(".layui-badge-dot").remove();
       },
+
       theme: function () {
-        C.popupRight({
+        Admin.popupRight({
           id: "LAY_adminPopupTheme",
           success: function () {
             view(this.id).render("system/theme");
           },
         });
       },
+
       note: function (e) {
-        var a = C.screen() < 2,
+        var a = Admin.screen() < 2,
           t = layui.data(setter.tableName).note;
-        k.note.index = C.popup({
+        k.note.index = Admin.popup({
           title: "便签",
           shade: 0,
           offset: ["41px", a ? null : e.offset().left - 250 + "px"],
@@ -343,16 +365,18 @@ layui.define("view", function (e) {
           },
         });
       },
+
       fullscreen: function (e) {
         var a = "layui-icon-screen-full",
           t = "layui-icon-screen-restore",
           i = e.children("i");
         i.hasClass(a)
-          ? (C.fullScreen(), i.addClass(t).removeClass(a))
-          : (C.exitScreen(), i.addClass(a).removeClass(t));
+          ? (Admin.fullScreen(), i.addClass(t).removeClass(a))
+          : (Admin.exitScreen(), i.addClass(a).removeClass(t));
       },
+      
       about: function () {
-        C.popupRight({
+        Admin.popupRight({
           id: "LAY_adminPopupAbout",
           success: function () {
             view(this.id).render("system/about");
@@ -360,7 +384,7 @@ layui.define("view", function (e) {
         });
       },
       more: function () {
-        C.popupRight({
+        Admin.popupRight({
           id: "LAY_adminPopupMore",
           success: function () {
             view(this.id).render("system/more");
@@ -375,7 +399,7 @@ layui.define("view", function (e) {
         e.siblings(".layui-this").data("index");
         e.hasClass(layuiThis) ||
           (e.addClass(layuiThis).siblings(".layui-this").removeClass(layuiThis),
-          C.initTheme(a));
+          Admin.initTheme(a));
       },
       rollPage: function (e, t) {
         var i = jquery("#LAY_app_tabsheader"),
@@ -421,7 +445,7 @@ layui.define("view", function (e) {
         k.rollPage();
       },
       closeThisTabs: function () {
-        C.closeThisTabs();
+        Admin.closeThisTabs();
       },
       closeOtherTabs: function (e) {
         var t = "LAY-system-pagetabs-remove";
@@ -432,8 +456,8 @@ layui.define("view", function (e) {
               .remove())
           : (jquery(z).each(function (e, i) {
               e &&
-                e != C.tabsPage.index &&
-                (jquery(i).addClass(t), C.tabsBody(e).addClass(t));
+                e != Admin.tabsPage.index &&
+                (jquery(i).addClass(t), Admin.tabsBody(e).addClass(t));
             }),
             jquery("." + t).remove());
       },
@@ -441,7 +465,7 @@ layui.define("view", function (e) {
         k.closeOtherTabs("all"), (location.hash = "");
       },
       shade: function () {
-        C.sideFlexible();
+        Admin.sideFlexible();
       },
       update: function () {
         jquery.ajax({
@@ -449,12 +473,12 @@ layui.define("view", function (e) {
           dataType: "jsonp",
           data: {
             name: "layuiAdmin",
-            version: C.v,
+            version: Admin.v,
           },
           url: "https://fly.layui.com/api/product_update/",
           success: function (e) {
             0 === e.status
-              ? e.version === C.v.replace(/\s|pro|std/g, "")
+              ? e.version === Admin.v.replace(/\s|pro|std/g, "")
                 ? layer.alert("当前版本已经是最新版本")
                 : layer.alert(
                     "检查到更新，是否前往下载？",
@@ -499,13 +523,14 @@ layui.define("view", function (e) {
         });
       },
     });
+
   !(function () {
     var e = layui.data(setter.tableName);
     e.theme
-      ? C.theme(e.theme)
-      : setter.theme && C.initTheme(setter.theme.initColorIndex),
+      ? Admin.theme(e.theme)
+      : setter.theme && Admin.initTheme(setter.theme.initColorIndex),
       body.addClass("layui-layout-body"),
-      C.screen() < 1 && delete setter.pageTabs,
+      Admin.screen() < 1 && delete setter.pageTabs,
       setter.pageTabs || container.addClass("layadmin-tabspage-none"),
       device.ie &&
         device.ie < 10 &&
@@ -519,7 +544,7 @@ layui.define("view", function (e) {
           }
         );
   })(),
-    C.on("hash(side)", function (e) {
+    Admin.on("hash(side)", function (e) {
       var t = e.path,
         i = function (e) {
           return {
@@ -531,7 +556,7 @@ layui.define("view", function (e) {
         n = jquery("#" + laySystemSideMenu),
         l = "layui-nav-itemed",
         s = function (e) {
-          var n = C.correctRouter(t.join("/"));
+          var n = Admin.correctRouter(t.join("/"));
           e.each(function (e, s) {
             var r = jquery(s),
               o = i(r),
@@ -539,7 +564,7 @@ layui.define("view", function (e) {
               c =
                 t[0] == o.name ||
                 (0 === e && !t[0]) ||
-                (o.jump && n == C.correctRouter(o.jump));
+                (o.jump && n == Admin.correctRouter(o.jump));
             if (
               (u.each(function (e, s) {
                 var r = jquery(s),
@@ -547,14 +572,14 @@ layui.define("view", function (e) {
                   c = u.list.children("dd"),
                   y =
                     (t[0] == o.name && t[1] == u.name) ||
-                    (u.jump && n == C.correctRouter(u.jump));
+                    (u.jump && n == Admin.correctRouter(u.jump));
                 if (
                   (c.each(function (e, s) {
                     var r = jquery(s),
                       c = i(r),
                       y =
                         (t[0] == o.name && t[1] == u.name && t[2] == c.name) ||
-                        (c.jump && n == C.correctRouter(c.jump));
+                        (c.jump && n == Admin.correctRouter(c.jump));
                     if (y) {
                       var m = c.list[0] ? l : layuiThis;
                       return r.addClass(m).siblings().removeClass(m), !1;
@@ -574,14 +599,14 @@ layui.define("view", function (e) {
           });
         };
       n.find("." + layuiThis).removeClass(layuiThis),
-        C.screen() < 2 && C.sideFlexible(),
+        Admin.screen() < 2 && Admin.sideFlexible(),
         s(n.children("li"));
     }),
     ele.on("nav(layadmin-system-side-menu)", function (e) {
       e.siblings(".layui-nav-child")[0] &&
         container.hasClass(layadminSideShrink) &&
-        (C.sideFlexible("spread"), layer.close(e.data("index"))),
-        (C.tabsPage.type = "nav");
+        (Admin.sideFlexible("spread"), layer.close(e.data("index"))),
+        (Admin.tabsPage.type = "nav");
     }),
     ele.on("nav(layadmin-pagetabs-nav)", function (e) {
       var a = e.parent();
@@ -592,31 +617,31 @@ layui.define("view", function (e) {
         t = e.attr("lay-attr"),
         i = e.index();
       (location.hash = a === setter.entry ? "/" : t || "/"),
-        C.tabsBodyChange(i);
+        Admin.tabsBodyChange(i);
     },
     z = "#LAY_app_tabsheader>li";
   body.on("click", z, function () {
     var e = jquery(this),
       t = e.index();
     return (
-      (C.tabsPage.type = "tab"),
-      (C.tabsPage.index = t),
+      (Admin.tabsPage.type = "tab"),
+      (Admin.tabsPage.index = t),
       "iframe" === e.attr("lay-attr")
-        ? C.tabsBodyChange(t)
-        : (F(e), C.runResize(), void C.resizeTable())
+        ? Admin.tabsBodyChange(t)
+        : (F(e), Admin.runResize(), void Admin.resizeTable())
     );
   }),
     ele.on("tabDelete(layadmin-layout-tabs)", function (e) {
       var t = jquery(z + ".layui-this");
-      e.index && C.tabsBody(e.index).remove(), F(t), C.delResize();
+      e.index && Admin.tabsBody(e.index).remove(), F(t), Admin.delResize();
     }),
     body.on("click", "*[lay-href]", function () {
       var e = jquery(this),
         t = e.attr("lay-href"),
         i = layui.router();
-      (C.tabsPage.elem = e),
-        (location.hash = C.correctRouter(t)),
-        C.correctRouter(t) === i.href && C.events.refresh();
+      (Admin.tabsPage.elem = e),
+        (location.hash = Admin.correctRouter(t)),
+        Admin.correctRouter(t) === i.href && Admin.events.refresh();
     }),
     body.on("click", "*[layadmin-event]", function () {
       var e = jquery(this),
@@ -650,9 +675,9 @@ layui.define("view", function (e) {
     layer.closeAll("tips"),
       A.lock ||
         setTimeout(function () {
-          C.sideFlexible(C.screen() < 2 ? "" : "spread"), delete A.lock;
+          Admin.sideFlexible(Admin.screen() < 2 ? "" : "spread"), delete A.lock;
         }, 100),
       (A.lock = !0);
   });
-  win.on("resize", layui.data.resizeSystem), e("admin", C);
+  win.on("resize", layui.data.resizeSystem), e("admin", Admin);
 });

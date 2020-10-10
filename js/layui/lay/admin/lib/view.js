@@ -6,11 +6,11 @@ layui.define(["laytpl", "layer"], function (e) {
     setter = layui.setter,
     o = (layui.device(), layui.hint()),
     view = function (e) {
-      return new d(e);
+      return new viewInner(e);
     },
     layAppBody = "LAY_app_body",
-    d = function (e) {
-      (this.id = e), (this.container = jquery("#" + (e || layAppBody)));
+    viewInner = function (id) {
+      (this.id = id), (this.container = jquery("#" + (id || layAppBody)));
     };
   (view.loading = function (e) {
     e.append(
@@ -137,15 +137,15 @@ layui.define(["laytpl", "layer"], function (e) {
         )
       );
     }),
-
-    (d.prototype.render = function (viewPath, a) {
+    (viewInner.prototype.render = function (viewPath, a) {
       var that = this;
       layui.router();
       return (
         (viewPath = setter.views + viewPath + setter.engine),
-        jquery("#" + layAppBody).children(".layadmin-loading").remove(),
+        jquery("#" + layAppBody)
+          .children(".layadmin-loading")
+          .remove(),
         view.loading(that.container),
-
         jquery.ajax({
           url: viewPath,
           type: "get",
@@ -156,7 +156,9 @@ layui.define(["laytpl", "layer"], function (e) {
           success: function (body) {
             body = "<div>" + body + "</div>";
             var title = jquery(body).find("title"),
-              titleText = title.text() || (body.match(/\<title\>([\s\S]*)\<\/title>/) || [])[1],
+              titleText =
+                title.text() ||
+                (body.match(/\<title\>([\s\S]*)\<\/title>/) || [])[1],
               struct = {
                 title: titleText,
                 body: body,
@@ -183,17 +185,16 @@ layui.define(["laytpl", "layer"], function (e) {
         that
       );
     }),
-
-    (d.prototype.parse = function (e, n, r) {
-      var s = this,
-        d = "object" == typeof e,
-        l = d ? e : jquery(e),
-        u = d ? e : l.find("*[template]"),
+    (viewInner.prototype.parse = function (target, n, r) {
+      var that = this,
+        isObj = "object" == typeof target,
+        $target = isObj ? target : jquery(target),
+        templates = isObj ? target : $target.find("*[template]"),
         c = function (e) {
           var n = laytpl(e.dataElem.html()),
             o = jquery.extend(
               {
-                params: y.params,
+                params: router.params,
               },
               e.res
             );
@@ -204,54 +205,54 @@ layui.define(["laytpl", "layer"], function (e) {
             console.error(e.dataElem[0], "\n存在错误回调脚本\n\n", i);
           }
         },
-        y = layui.router();
-      l.find("title").remove(),
-        s.container[n ? "after" : "html"](l.children()),
-        (y.params = s.params || {});
-      for (var p = u.length; p > 0; p--)
+        router = layui.router();
+      $target.find("title").remove(),
+        that.container[n ? "after" : "html"]($target.children()),
+        (router.params = that.params || {});
+      for (var p = templates.length; p > 0; p--)
         !(function () {
-          var e = u.eq(p - 1),
-            t = e.attr("lay-done") || e.attr("lay-then"),
-            n = laytpl(e.attr("lay-url") || "").render(y),
-            r = laytpl(e.attr("lay-data") || "").render(y),
-            s = laytpl(e.attr("lay-headers") || "").render(y);
+          var e = templates.eq(p - 1),
+            done = e.attr("lay-done") || e.attr("lay-then"),
+            url = laytpl(e.attr("lay-url") || "").render(router),
+            data = laytpl(e.attr("lay-data") || "").render(router),
+            headers = laytpl(e.attr("lay-headers") || "").render(router);
           try {
-            r = new Function("return " + r + ";")();
+            data = new Function("return " + data + ";")();
           } catch (d) {
-            o.error("lay-data: " + d.message), (r = {});
+            o.error("lay-data: " + d.message), (data = {});
           }
           try {
-            s = new Function("return " + s + ";")();
+            headers = new Function("return " + headers + ";")();
           } catch (d) {
-            o.error("lay-headers: " + d.message), (s = s || {});
+            o.error("lay-headers: " + d.message), (headers = headers || {});
           }
-          n
+          url
             ? view.req({
                 type: e.attr("lay-type") || "get",
-                url: n,
-                data: r,
+                url: url,
+                data: data,
                 dataType: "json",
-                headers: s,
-                success: function (a) {
+                headers: headers,
+                success: function (resp) {
                   c({
                     dataElem: e,
-                    res: a,
-                    done: t,
+                    res: resp,
+                    done: done,
                   });
                 },
               })
             : c({
                 dataElem: e,
-                done: t,
+                done: done,
               });
         })();
-      return s;
+      return that;
     }),
-    (d.prototype.send = function (e, t) {
+    (viewInner.prototype.send = function (e, t) {
       var n = laytpl(e || this.container.html()).render(t || {});
       return this.container.html(n), this;
     }),
-    (d.prototype.refresh = function (e) {
+    (viewInner.prototype.refresh = function (e) {
       var t = this,
         a = t.container.next(),
         n = a.attr("lay-templateid");
@@ -265,10 +266,10 @@ layui.define(["laytpl", "layer"], function (e) {
           }),
           t);
     }),
-    (d.prototype.then = function (e) {
+    (viewInner.prototype.then = function (e) {
       return (this.then = e), this;
     }),
-    (d.prototype.done = function (e) {
+    (viewInner.prototype.done = function (e) {
       return (this.done = e), this;
     }),
     e("view", view);
