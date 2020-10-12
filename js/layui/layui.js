@@ -198,9 +198,9 @@
       );
     }),
     (n.callback = {}),
-    (r.prototype.factory = function (e) {
-      if (layui[e])
-        return "function" == typeof n.callback[e] ? n.callback[e] : null;
+    (r.prototype.factory = function (modName) {
+      if (layui[modName])
+        return "function" == typeof n.callback[modName] ? n.callback[modName] : null;
     }),
     (r.prototype.addcss = function (e, t, r) {
       return layui.link(n.dir + "css/" + e, t, r);

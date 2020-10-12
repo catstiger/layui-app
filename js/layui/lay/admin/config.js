@@ -15,6 +15,7 @@ layui.define(["laytpl", "layer", "element", "util"], function (exports) {
     entry: "index", //默认视图文件名
     engine: ".html", //视图文件后缀名
     pageTabs: false, //是否开启页面选项卡功能。单页版不推荐开启
+    apiHost: 'http://localhost:8080',
 
     name: "Layui App Pro",
     tableName: "layuiAdmin", //本地存储表名

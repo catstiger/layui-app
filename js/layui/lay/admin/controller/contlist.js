@@ -1,5 +1,5 @@
 /** layuiAdmin.pro-v1.4.0 LPPL License By https://www.layui.com/admin/ */
-layui.define(["table", "form"], function (t) {
+layui.define(["table", "form"], function (exports) {
   var e = (layui.$, layui.admin),
     view = layui.view,
     table = layui.table,
@@ -153,5 +153,5 @@ layui.define(["table", "form"], function (t) {
             },
           });
     }),
-    t("contlist", {});
+    exports("contlist", {});
 });
