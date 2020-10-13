@@ -57,8 +57,7 @@
         </a>
       </li>
       <li class="layui-nav-item" lay-unselect>
-        <script type="text/html" template lay-url="./json/user/session.json" 
-        lay-done="layui.element.render('nav', 'layadmin-layout-right');">
+        <script type="text/html" template lay-url="./json/user/session.json" lay-done="layui.element.render('nav', 'layadmin-layout-right');">
           <a href="javascript:;">
             <cite>{{ d.data.username }}</cite>
           </a>
@@ -92,9 +91,9 @@
         
         <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
         {{# 
-          var path =  layui.router().path
-          ,pathURL = layui.admin.correctRouter(path.join('/'))
-          ,dataName = layui.setter.response.dataName;
+          var path =  layui.router().path, 
+          pathURL = layui.admin.correctRouter(path.join('/')), 
+          dataName = layui.setter.response.dataName;
           
           layui.each(d[dataName], function(index, item){ 
             var hasChildren = typeof item.list === 'object' && item.list.length > 0

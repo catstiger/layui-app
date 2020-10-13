@@ -11,7 +11,6 @@ layui
       admin = layui.admin,
       tabsPage = admin.tabsPage,
       view = layui.view,
-
       render = function () {
         var router = layui.router(),
           path = router.path,
@@ -20,7 +19,7 @@ layui
         path.length || (path = [""]),
           "" === path[path.length - 1] &&
             (path[path.length - 1] = setter.entry);
-        
+
         var h = function (e) {
           render.haveInit &&
             jquery(".layui-layer").each(function () {
@@ -83,7 +82,6 @@ layui
               }),
             void h());
       },
-
       doRouter = function (e) {
         var n,
           router = layui.router(),
@@ -105,20 +103,20 @@ layui
           if (setter.interceptor) {
             var u = layui.data(setter.tableName);
             if (!u[setter.request.tokenName])
-              return (location.hash =
-                "/user/login/redirect=" + encodeURIComponent(correctRouter));
+              return (location.hash = "/user/login/redirect=" + encodeURIComponent(correctRouter));
           }
-          "console" === admin.pageType
-            ? render()
-            : v.render("layout").done(function () {
-                render(),
-                  layui.element.render(),
-                  admin.screen() < 2 && admin.sideFlexible(),
-                  (admin.pageType = "console");
-              });
+          if ("console" === admin.pageType) {
+            render();
+          } else {
+            v.render("layout").done(function () {
+              render();
+              layui.element.render();
+              admin.screen() < 2 && admin.sideFlexible();
+              admin.pageType = "console";
+            });
+          }
         }
       },
-
       layAppBody = "#LAY_app_body",
       layadminLayoutTabs = "layadmin-layout-tabs",
       jquery = layui.$,
