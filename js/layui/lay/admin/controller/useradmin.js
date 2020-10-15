@@ -4,6 +4,7 @@ layui.define(["table", "form"], function (exports) {
     view = layui.view,
     table = layui.table,
     form = layui.form;
+  let setter = layui.setter;
   table.render({
     elem: "#LAY-user-manage",
     url: "./json/useradmin/webuser.json",
@@ -125,7 +126,7 @@ layui.define(["table", "form"], function (exports) {
     }),
     table.render({
       elem: "#LAY-user-back-role",
-      url: "./json/useradmin/role.json",
+      url: setter.apiHost + "/roles/index",
       cols: [
         [
           { type: "checkbox", fixed: "left" },

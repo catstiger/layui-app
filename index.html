@@ -17,11 +17,33 @@
           base: "/js/layui/lay/admin/", //指定 layuiAdmin 项目路径
           version: "1.4.0",
         })
-        .use("index", function () {
-          var layer = layui.layer,
-            admin = layui.admin;
+        .use(["index", "jquery"], function () {
+          var layer = layui.layer;
+          var $ = layui.jquery;
+          var setter = layui.setter;
+          var admin = layui.admin;
+          var request = setter.request;
+
+          $.ajaxSetup({
+            dataType: "json",
+            contentType: "application/json",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "authorization": layui.data(setter.tableName)[request.tokenName] || ""
+            }
+          });
+
           layer.ready(function () {
-            
+            let hash = location.hash;
+            if (hash.indexOf("#/") === 0) {
+              hash = hash.substring(2);
+              console.log(hash);
+              $('a[lay-href="' + hash + '"]').each(function () {
+                console.log(this);
+                $(this).parent("dd").addClass("layui-this");
+                $(this).parent("li").addClass("layui-nav-itemed");
+              });
+            }
           });
         });
     </script>

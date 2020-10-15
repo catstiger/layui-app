@@ -34,7 +34,7 @@ layui.define(["laytpl", "layer"], function (exports) {
         error = options.error,
         request = setter.request,
         response = setter.response,
-        d = function () {
+        errMsg = function () {
           return setter.debug ? "<br><cite>URL：</cite>" + options.url : "";
         };
       if (
@@ -50,10 +50,7 @@ layui.define(["laytpl", "layer"], function (exports) {
           request.tokenName in params
             ? options.data[request.tokenName]
             : layui.data(setter.tableName)[request.tokenName] || ""),
-          (options.headers[request.tokenName] =
-            request.tokenName in options.headers
-              ? options.headers[request.tokenName]
-              : layui.data(setter.tableName)[request.tokenName] || "");
+          (options.headers['authorization']  = layui.data(setter.tableName)[request.tokenName] || "");
       }
       return (
         delete options.success,
@@ -64,6 +61,9 @@ layui.define(["laytpl", "layer"], function (exports) {
               type: "get",
               dataType: "json",
               success: function (resp) {
+                if (setter.debug) {
+                  console.log(resp);
+                }
                 var statusCode = response.statusCode;
                 if (resp[response.statusName] == statusCode.ok)
                   "function" == typeof options.done && options.done(resp);
@@ -73,16 +73,19 @@ layui.define(["laytpl", "layer"], function (exports) {
                   var r = [
                     "<cite>Error：</cite> " +
                       (resp[response.msgName] || "返回状态码异常"),
-                    d(),
+                    errMsg(),
                   ].join("");
                   view.error(r);
                 }
                 "function" == typeof success && success(resp);
               },
               error: function (e, t) {
+                if (setter.debug) {
+                  console.log(e, t);
+                }
                 var a = [
                   "请求异常，请重试<br><cite>错误信息：</cite>" + t,
-                  d(),
+                  errMsg(),
                 ].join("");
                 view.error(a), "function" == typeof error && error(res);
               },
@@ -155,20 +158,18 @@ layui.define(["laytpl", "layer"], function (exports) {
           },
           success: function (body) {
             body = "<div>" + body + "</div>";
-            var title = jquery(body).find("title"),
-              titleText =
-                title.text() ||
-                (body.match(/\<title\>([\s\S]*)\<\/title>/) || [])[1],
-              struct = {
+            var title = jquery(body).find("title");
+            let titleText = title.text() || (body.match(/\<title\>([\s\S]*)\<\/title>/) || [])[1];
+            let struct = {
                 title: titleText,
                 body: body,
-              };
-            title.remove(),
-              (that.params = a || {}),
-              that.then && (that.then(struct), delete that.then),
-              that.parse(body),
-              view.removeLoad(),
-              that.done && (that.done(struct), delete that.done);
+            };
+            title.remove();
+            (that.params = a || {});
+            that.then && (that.then(struct), delete that.then);
+            that.parse(body);
+            view.removeLoad();
+            that.done && (that.done(struct), delete that.done);
           },
           error: function (e) {
             return (
