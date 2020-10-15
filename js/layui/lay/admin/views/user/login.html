@@ -141,7 +141,6 @@
         url: setter.apiHost + "/login", //实际使用请改成服务端真实接口
         data: obj.field,
         done: function (res) {
-          console.log(res)
           //请求成功后，写入 access_token
           layui.data(setter.tableName, {
             key: setter.request.tokenName,
@@ -154,7 +153,7 @@
             {
               offset: "15px",
               icon: 1,
-              time: 5000,
+              time: 2000,
             },
             function () {
               location.hash = search.redirect
@@ -166,10 +165,5 @@
       });
     });
 
-    //实际使用时记得删除该代码
-    layer.msg("为了方便演示，用户名密码可随意输入", {
-      offset: "15px",
-      icon: 1,
-    });
   });
 </script>

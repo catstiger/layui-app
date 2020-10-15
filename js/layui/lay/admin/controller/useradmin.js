@@ -8,6 +8,7 @@ layui.define(["table", "form"], function (exports) {
   table.render({
     elem: "#LAY-user-manage",
     url: "./json/useradmin/webuser.json",
+    
     cols: [
       [
         { type: "checkbox", fixed: "left" },
@@ -127,13 +128,14 @@ layui.define(["table", "form"], function (exports) {
     table.render({
       elem: "#LAY-user-back-role",
       url: setter.apiHost + "/roles/index",
+      parseData: layui.setter.parseData,
       cols: [
         [
           { type: "checkbox", fixed: "left" },
           { field: "id", width: 80, title: "ID", sort: !0 },
-          { field: "rolename", title: "角色名" },
+          { field: "name", title: "角色名" },
           { field: "limits", title: "拥有权限" },
-          { field: "descr", title: "具体描述" },
+          { field: "descn", title: "具体描述" },
           {
             title: "操作",
             width: 150,

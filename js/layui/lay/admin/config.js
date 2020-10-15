@@ -9,6 +9,14 @@
 
 layui.define(["laytpl", "layer", "element", "util"], function (exports) {
   exports("setter", {
+    parseData: function(res){ //res 即为原始返回的数据
+      return {
+        "code": 0, //解析接口状态
+        "msg": '', //解析提示文本
+        "count": res.total, //解析数据长度
+        "data": res.rows //解析数据列表
+      };
+    },
     container: "LAY_app", //容器ID
     base: layui.cache.base, //记录layuiAdmin文件夹所在路径
     views: layui.cache.base + "views/", //视图所在目录

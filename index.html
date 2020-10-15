@@ -38,8 +38,7 @@
             if (hash.indexOf("#/") === 0) {
               hash = hash.substring(2);
               console.log(hash);
-              $('a[lay-href="' + hash + '"]').each(function () {
-                console.log(this);
+              $('a[lay-href="' + hash + '"]').each(function () {               
                 $(this).parent("dd").addClass("layui-this");
                 $(this).parent("li").addClass("layui-nav-itemed");
               });
