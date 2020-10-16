@@ -147,6 +147,7 @@ layui.define(["table", "form"], function (exports) {
       ],
       text: "对不起，加载出现异常！",
     }),
+    
     table.on("tool(LAY-user-back-role)", function (e) {
       var l = e.data;
       "del" === e.event
