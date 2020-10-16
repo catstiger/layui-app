@@ -138,7 +138,7 @@ layui.define(["table", "form"], function (exports) {
           { field: "descn", title: "具体描述" },
           {
             title: "操作",
-            width: 150,
+            width: 180,
             align: "center",
             fixed: "right",
             toolbar: "#table-useradmin-admin",

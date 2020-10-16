@@ -1360,3 +1360,197 @@ html {
       overflow: auto
   }
 }
+
+
+.layui-btn {
+  display: inline-block;
+  height: 38px;
+  line-height: 38px;
+  padding: 0 18px;
+  
+  outline: 0; 
+  overflow: hidden;  
+  position: relative; 
+  transition: .3s; 
+  cursor: pointer; 
+  user-select: none; 
+  background-color: #15BACF;
+  text-align: center; 
+}
+
+.layui-btn, .layui-layer-btn0 {
+  box-shadow: 0 14px 26px -12px rgba(0,188,212,.42), 0 4px 23px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(0,188,212,.2);
+}
+
+.layui-layer-btn1 {
+  box-shadow: 0 14px 26px -12px rgba(0,0,0,.42), 0 4px 23px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(0,0,0,.2);
+}
+
+.layui-nav-child dd a {
+  overflow: hidden;  
+  position: relative; 
+  transition: .3s; 
+  cursor: pointer; 
+  user-select: none; 
+}
+
+
+.layui-btn:after, .layui-nav-child dd a:after, 
+.layui-layer-btn .layui-layer-btn0:after,
+.layui-layer-btn .layui-layer-btn1:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  padding-top: 100%;
+  background: transparent;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%)
+}
+
+.layui-layer-btn0 {
+  background-color: #15BACF !important;
+  border-color: #15BACF !important;
+}
+
+@keyframes ripple{
+  from {
+      transform:translate(-50%,-50%) scale(0);
+      /**由于我们默认写了变换属性，所以这里要补上translate(-50%,-50%)，不然就会被替换了**/
+      background: rgba(0,0,0,.25);
+  }
+  to {
+      transform:translate(-50%,-50%) scale(1);
+      background: transparent;
+  }
+}
+
+.layui-btn:focus:after {
+  animation: ripple 0.5s;
+}
+
+.layui-nav-child dd a:focus:after {
+  animation: ripple 0.5s;
+}
+
+.layui-layer-btn0:focus:after,
+.layui-layer-btn1:focus:after {
+  animation: ripple 0.5s;
+}
+
+.layui-btn-danger {
+  background-color: #ff6822;
+}
+
+.layui-btn-xs {
+  padding: 0px 10px 0px 10px;
+  height: 24px;
+  line-height: 24px;
+  box-shadow: none;
+}
+
+.layui-form-select dl {
+  padding: 5px;
+  border-radius: .25rem;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+}
+
+.layui-form-select dl dd:hover {
+  background-color: #15bacf;
+  border-radius: .125rem;
+  color: #fff;
+}
+
+.layui-form-select dl dd.layui-this {
+  background-color: #15bacf;
+  border-radius: .125rem;
+  color: #fff;
+  box-shadow: 0 14px 26px -12px rgba(0,188,212,.42), 0 4px 23px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(0,188,212,.2);
+  transition: transform .3s cubic-bezier(.4,0,.2,1),opacity .2s cubic-bezier(.4,0,.2,1);
+}
+
+.layui-side-menu .layui-nav .layui-nav-itemed>.layui-nav-child {
+  padding: 0px;
+}
+
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+  background-color: #1E9FFF;
+  box-shadow: 0 4px 5px 0 rgba(30, 159, 255,.14), 0 1px 10px 0 rgba(30, 159, 255,.12), 0 2px 4px -1px rgba(30, 159, 255,.2);
+}
+
+.layui-side-menu {
+  background-color: #222 !important;
+}
+
+.layui-side.layui-side-menu {
+  box-shadow: 0 16px 38px -12px rgba(0,0,0,.56), 0 4px 25px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(0,0,0,.2);
+}
+
+.layui-nav-tree .layui-nav-child dd.layui-this, .layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this>a, .layui-nav-tree .layui-this>a:hover {
+  background-color: #15BACF;
+}
+
+.layui-layout-admin .layui-logo {
+  background-color: #15BACF;
+}
+
+.layui-layer-page {
+    box-shadow: 0 27px 24px 0 rgba(0,0,0,.2), 0 40px 77px 0 rgba(0,0,0,.22);
+    border-radius: 6px;
+    border: none;     
+}
+
+.layui-layer-admin .layui-layer-content {
+  padding: 0px;
+}
+
+.layui-layer-admin .layui-layer-content .layui-footer {
+  bottom: 0;
+  position: absolute;
+  padding: 12px 0px;
+  text-align: center;
+  width: 100%;
+  background: #f9f9f9;
+  border-radius: 0 0 6px 6px;
+}
+
+
+.layui-layer-admin .layui-layer-title {
+  border-radius: 6px 6px 0 0;
+    height: 50px;
+    line-height: 50px;
+    border: 0;
+    background-color: #f9f9f9;
+    color: #666;
+    font-weight: 600;
+}
+
+.layui-layer-btn {
+  border-radius: 0 0 6px 6px;
+  background: #f9f9f9;
+}
+
+.layui-layer-admin i[close] {
+  color: #01aaed;
+}
+
+.text-info {
+  color: #00cae3;
+}
+
+.text-warning {
+  color: #ff9e0f;
+}
+
+.text-danger {
+  color: #f44336;
+}
+
+.text-success {
+  color: #55b559;
+}
+
+.text-rose {
+  color: #ea2c6d;
+}

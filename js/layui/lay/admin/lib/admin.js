@@ -155,7 +155,8 @@ layui.define("view", function (e) {
         layui.table && (e ? setTimeout(i, e) : i());
       },
 
-      theme: function (e) {
+      theme: function (e) {return;
+        /*
         var i = (setter.theme, layui.data(setter.tableName)),
           layAdminTheme = "LAY_layadmin_theme",
           domStyle = document.createElement("style"),
@@ -201,7 +202,7 @@ layui.define("view", function (e) {
           layui.data(setter.tableName, {
             key: "theme",
             value: i.theme,
-          });
+          });*/
       },
 
       initTheme: function (e) {

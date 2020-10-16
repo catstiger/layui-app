@@ -91,9 +91,9 @@
       ></table>
       <script type="text/html" id="buttonTpl">
         {{# if(d.status){ }}
-        <button class="layui-btn layui-btn-xs">已发布</button>
+        <span class="text-success">已发布</span>
         {{# } else { }}
-        <button class="layui-btn layui-btn-primary layui-btn-xs">待修改</button>
+        <span class="text-info">待修改</span>
         {{# } }}
       </script>
       <script type="text/html" id="table-content-list">
@@ -113,7 +113,7 @@
         view = layui.view,
         table = layui.table,
         form = layui.form;
-
+      console.log(table)
      form.render(null, "app-content-list");
 
       //监听搜索
@@ -153,6 +153,7 @@
           admin.popup({
             title: "添加文章",
             area: ["550px", "550px"],
+            //btn: ['重要','奇葩'], //按钮
             id: "LAY-popup-content-add",
             success: function (layero, index) {
               view(this.id)
