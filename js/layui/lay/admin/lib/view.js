@@ -126,17 +126,17 @@ layui.define(["laytpl", "layer"], function (exports) {
         )
       );
     }),
-    (view.error = function (content, a) {
+    (view.error = function (content, opts) {
       return view.popup(
         jquery.extend(
           {
-            content: content,
+            content: '<div style="padding:15px 20px;">' + content + '</div>',
             maxWidth: 300,
             offset: "t",
             anim: 6,
             id: "LAY_adminError",
           },
-          a
+          opts
         )
       );
     }),
