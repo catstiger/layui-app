@@ -36,7 +36,9 @@ layui.define("view", function (e) {
         return layui.onevent.call(this, setter.MOD_NAME, e, a);
       },
       popup: view.popup,
-      popupRight: function (e) {
+      popupRight: function (opts) {
+        if (!opts) opts = {};
+        
         return (Admin.popup.index = layer.open(
           jquery.extend(
             {
@@ -49,9 +51,9 @@ layui.define("view", function (e) {
               shade: 0.1,
               shadeClose: !0,
               skin: "layui-anim layui-anim-rl layui-layer-adminRight",
-              area: "300px",
+              area: '300px'
             },
-            e
+            opts
           )
         ));
       },
@@ -124,19 +126,37 @@ layui.define("view", function (e) {
 
       sideFlexible: function (e) {
         var cnt = container,
-          i = jquery("#" + layAppFlexible),
-          l = Admin.screen();
-        "spread" === e
-          ? (i.removeClass(layuiIconSpreadLeft).addClass(layuiIconShrinkRight),
-            l < 2
-              ? cnt.addClass(layadminSideSpreadSm)
-              : cnt.removeClass(layadminSideSpreadSm),
-            cnt.removeClass(layadminSideShrink))
-          : (i.removeClass(layuiIconShrinkRight).addClass(layuiIconSpreadLeft),
-            l < 2
-              ? cnt.removeClass(layadminSideShrink)
-              : cnt.addClass(layadminSideShrink),
-            cnt.removeClass(layadminSideSpreadSm)),
+          $app = jquery("#" + layAppFlexible),
+          screenSize = Admin.screen();
+          
+          if ('spread' === e) { //展开
+            $app.removeClass(layuiIconSpreadLeft).addClass(layuiIconShrinkRight);
+            if (screenSize < 2) {
+              cnt.addClass(layadminSideSpreadSm);
+            } else {
+              cnt.removeClass(layadminSideSpreadSm);
+            }
+            cnt.removeClass(layadminSideShrink);
+          } else { //收起
+            $app.removeClass(layuiIconShrinkRight).addClass(layuiIconSpreadLeft);
+            if (screenSize < 2) {
+              cnt.removeClass(layadminSideShrink)
+            } else {
+              cnt.addClass(layadminSideShrink)
+            }
+            cnt.removeClass(layadminSideSpreadSm)
+          }
+
+          let wrapper = jquery('.layui-side-menu-wrapper').hide();
+          
+          let t = setTimeout(function() {
+            wrapper.css({
+              width: jquery('.layui-side-menu').width() + 'px'
+            }).fadeIn('fast');
+            clearTimeout(t);
+          }, 350);
+          
+        
           layui.event.call(this, setter.MOD_NAME, "side({*})", {
             status: e,
           });

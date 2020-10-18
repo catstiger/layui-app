@@ -149,6 +149,26 @@
 
         //添加
         add: function (othis) {
+          admin.popupRight({
+            id: "app_content_form",
+            area: '550px',
+            success: function (layero, index) {
+              view(this.id).render("app/content/listform")
+              .done(function () {
+                  form.render(null, "layuiadmin-app-form-list");
+                  //监听提交
+                  form.on("submit(layuiadmin-app-form-submit)", function (data) {
+                    var field = data.field; //获取提交的字段
+
+                    //提交 Ajax 成功后，关闭当前弹层并重载表格
+                    //$.ajax({});
+                    layui.table.reload("LAY-app-content-list"); //重载表格
+                    layer.close(index); //执行关闭
+                  });
+              })
+            }
+          });
+          return;
           admin.popup({
             title: "添加文章",
             area: ["550px", "550px"],
