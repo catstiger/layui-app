@@ -35,6 +35,7 @@ layui.define(["table", "form"], function (exports) {
     limit: 10,
     limits: [10, 15, 20, 25, 30],
     text: "对不起，加载出现异常！",
+    height: 'full-280'
   });
 
   table.on("tool(LAY-app-content-list)", function (t) {
@@ -44,9 +45,9 @@ layui.define(["table", "form"], function (exports) {
           t.del(), layer.close(e);
         })
       : "edit" === t.event &&
-        e.popup({
+        layui.admin.popupRight({
           title: "编辑文章",
-          area: ["550px", "550px"],
+          area: "550px",
           id: "LAY-popup-content-edit",
           success: function (t, e) {
             view(this.id)
@@ -127,6 +128,7 @@ layui.define(["table", "form"], function (exports) {
     limit: 10,
     limits: [10, 15, 20, 25, 30],
     text: "对不起，加载出现异常！",
+    height: 'full-30'
   });
   table.on("tool(LAY-app-content-comm)", function (t) {
     var n = t.data;

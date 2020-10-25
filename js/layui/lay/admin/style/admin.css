@@ -38,7 +38,7 @@ html {
 }
 
 .layui-layout-admin .layui-side {
-  width: 220px;
+  width: 260px;
   top: 0;
   z-index: 1001;
 }
@@ -54,7 +54,7 @@ html {
   left: 0;
   top: 0;
   z-index: 1002;
-  width: 220px;
+  width: 260px;
   height: 49px;
   padding: 0 15px;
   box-sizing: border-box;
@@ -68,7 +68,7 @@ html {
 .layui-layout-admin .layui-body,
 .layui-layout-admin .layui-footer,
 .layui-layout-admin .layui-layout-left {
-  left: 220px;
+  left: 260px;
 }
 
 .layadmin-pagetabs {
@@ -298,11 +298,11 @@ html {
 }
 
 .layui-side-menu .layui-side-scroll {
-  width: 240px;
+  width: 280px;
 }
 
 .layui-side-menu .layui-nav {
-  width: 220px;
+  width: 260px;
   margin-top: 50px;
   background: 0 0;
 }
@@ -348,9 +348,9 @@ html {
 
 @media screen and (max-width: 992px) {
   .layui-layout-admin .layui-side {
-    transform: translate3d(-220px, 0, 0);
-    -webkit-transform: translate3d(-220px, 0, 0);
-    width: 220px;
+    transform: translate3d(-260px, 0, 0);
+    -webkit-transform: translate3d(-260px, 0, 0);
+    width: 260px;
   }
 
   .layadmin-pagetabs,
@@ -421,13 +421,13 @@ html {
 .layadmin-side-spread-sm .layui-layout-admin .layui-footer,
 .layadmin-side-spread-sm .layui-layout-admin .layui-layout-left {
   left: 0;
-  transform: translate3d(220px, 0, 0);
-  -webkit-transform: translate3d(220px, 0, 0);
+  transform: translate3d(260px, 0, 0);
+  -webkit-transform: translate3d(260px, 0, 0);
 }
 
 .layadmin-side-spread-sm .layui-layout-admin .layui-layout-right {
-  transform: translate3d(220px, 0, 0);
-  -webkit-transform: translate3d(220px, 0, 0);
+  transform: translate3d(260px, 0, 0);
+  -webkit-transform: translate3d(260px, 0, 0);
 }
 
 .layadmin-side-spread-sm .layui-side {
@@ -1611,7 +1611,7 @@ html {
 }
 
 .layui-layer-adminRight .layui-layer-content {
-  height: 100%;
+  height: calc(100% - 43px);
 }
 
 .layui-layer-btn {
@@ -1725,7 +1725,7 @@ body .layui-laydate .layui-this {
 }
 
 .layui-side-menu-wrapper {
-  width: 220px;
+  width: 260px;
   top: 0;
   z-index: 1000;
   position: fixed;
